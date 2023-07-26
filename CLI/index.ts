@@ -10,6 +10,16 @@ const treeNode = buildTree("../Courses");
 
 const filename = "graph2.mermaid";
 
+class TreeVertex {
+  public path: string;
+  public children: Array<TreeVertex>;
+
+  constructor(path: string) {
+    this.path = path;
+    this.children = [];
+  }
+}
+
 let data_mermaid =
   "mindmap" +
   "\n \t root((Courses))" +
@@ -24,28 +34,25 @@ fs.writeFileSync(filename, data_mermaid);
 
 const stack = [treeNode];
 
-if (treeNode != null) {
-  while (stack.length) {
-    const currentNode = stack.pop();
+while (stack.length) {
+  const currentNode = stack.pop();
 
-    if (currentNode) {
-      const children = currentNode.children;
-      for (let child of children) {
-        if (child.path.match("README.md")) {
-          console.log(child.path);
-          // lire première ligne du Readme.md
-          // string tokenizer
-          const tab_tokens: Array<string> = child.path.split("/");
+  if (currentNode) {
+    const children = currentNode.children;
+    for (let child of children) {
+      console.log(child.path);
 
-          const reader = fs.createReadStream(child.path);
-          reader.on("data", function (file) {
-            console.log(file.toString().trim().split("\n")[0]);
-          });
+      const tab_tokens: Array<string> = child.path.split("/");
 
-          if (true) {
-            stack.push(child);
-          }
-        }
+      if (child.path.match("README.md")) {
+        const reader = fs.createReadStream(child.path);
+        reader.on("data", function (file: string) {
+          console.log(file.toString().trim().split("\n")[0]);
+        });
+      }
+
+      if (child.children) {
+        stack.push(child);
       }
     }
   }

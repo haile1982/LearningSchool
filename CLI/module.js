@@ -15,6 +15,7 @@ var TreeNode = /** @class */ (function () {
 function buildTree(rootPath) {
     var root = new TreeNode(rootPath);
     var stack = [root];
+    console.log(stack.length);
     while (stack.length) {
         var currentNode = stack.pop();
         if (currentNode) {

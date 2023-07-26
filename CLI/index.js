@@ -18,26 +18,22 @@ var data_mermaid = "mindmap" +
     "\n \t \t         \t Scopes";
 fs.writeFileSync(filename, data_mermaid);
 var stack = [treeNode];
-if (treeNode != null) {
-    while (stack.length) {
-        var currentNode = stack.pop();
-        if (currentNode) {
-            var children = currentNode.children;
-            for (var _i = 0, children_1 = children; _i < children_1.length; _i++) {
-                var child = children_1[_i];
-                if (child.path.match("README.md")) {
-                    console.log(child.path);
-                    // lire première ligne du Readme.md
-                    // string tokenizer
-                    var tab_tokens = child.path.split("/");
-                    var reader = fs.createReadStream(child.path);
-                    reader.on("data", function (file) {
-                        console.log(file.toString().trim().split("\n")[0]);
-                    });
-                    if (true) {
-                        stack.push(child);
-                    }
-                }
+while (stack.length) {
+    var currentNode = stack.pop();
+    if (currentNode) {
+        var children = currentNode.children;
+        for (var _i = 0, children_1 = children; _i < children_1.length; _i++) {
+            var child = children_1[_i];
+            console.log(child.path);
+            var tab_tokens = child.path.split("/");
+            if (child.path.match("README.md")) {
+                var reader = fs.createReadStream(child.path);
+                reader.on("data", function (file) {
+                    console.log(file.toString().trim().split("\n")[0]);
+                });
+            }
+            if (child.children) {
+                stack.push(child);
             }
         }
     }

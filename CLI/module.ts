@@ -19,6 +19,8 @@ export function buildTree(rootPath: string) {
 
   const stack = [root];
 
+  console.log(stack.length);
+
   while (stack.length) {
     const currentNode = stack.pop();
 
