@@ -2,6 +2,8 @@
 import * as fs from "fs";
 import { buildTree } from "./module";
 
+// npm i --save-dev @types/fs-extra
+
 const treeNode = buildTree("../Courses");
 
 // parcours dans un arbre
@@ -10,12 +12,12 @@ const treeNode = buildTree("../Courses");
 
 const filename = "graph2.mermaid";
 
-class TreeVertex {
-  public path: string;
-  public children: Array<TreeVertex>;
+class TreeOntology {
+  public concept: string;
+  public children: Array<TreeOntology>;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(concept: string) {
+    this.concept = concept;
     this.children = [];
   }
 }
@@ -34,29 +36,85 @@ fs.writeFileSync(filename, data_mermaid);
 
 const stack = [treeNode];
 
-while (stack.length) {
-  const currentNode = stack.pop();
+let count: number = 0;
 
-  if (currentNode) {
-    const children = currentNode.children;
-    for (let child of children) {
-      console.log(child.path);
+let rootConcept: TreeOntology;
 
-      const tab_tokens: Array<string> = child.path.split("/");
+function createTreeOntology() {
+  while (stack.length) {
+    const currentNode = stack.pop();
 
-      if (child.path.match("README.md")) {
-        const reader = fs.createReadStream(child.path);
-        reader.on("data", function (file: string) {
-          console.log(file.toString().trim().split("\n")[0]);
-        });
-      }
+    if (currentNode) {
+      const children = currentNode.children;
+      for (let child of children) {
+        console.log(child.path);
 
-      if (child.children) {
-        stack.push(child);
+        const tab_tokens: Array<string> = child.path.split("/");
+
+        if (tab_tokens[0] && count === 0) {
+          rootConcept = new TreeOntology(tab_tokens[0]);
+          count = count + 1;
+        }
+
+        if (child.path.match("README.md")) {
+          const reader = fs.createReadStream(child.path);
+          reader.on("data", function (file: string) {
+            let concept = file.toString().trim().split("\n")[0];
+            console.log(concept);
+            const childConcept = new TreeOntology(concept);
+            rootConcept.children.push(childConcept);
+          });
+        }
+
+        if (child.children) {
+          stack.push(child);
+        }
       }
     }
   }
+  return rootConcept;
 }
+
+function readTreeOntology(rootConcept: TreeOntology) {
+  const stack = [rootConcept];
+
+  let level = 0;
+
+  console.log("---------*********-------------");
+
+  while (stack.length) {
+    const currentNode = stack.pop();
+
+    let nl = level === 0 ? "" : "\n";
+    let decalage: string = "\t".repeat(level);
+    console.log(`${nl} ${decalage} ${currentNode?.concept}`);
+    if (currentNode) {
+      const children = currentNode.children;
+      for (let child of children) {
+        console.log(`${nl} ${decalage} ${child.concept}`);
+        if (child.children) {
+          stack.push(child);
+        }
+      }
+    }
+    level = level + 1;
+  }
+}
+const toto = createTreeOntology();
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+(async () => {
+  // Do something before delay
+  console.log("before delay");
+
+  await delay(1000);
+
+  // Do something after
+  console.log("after delay");
+  readTreeOntology(toto);
+})();
 
 // 2- à partir de TreeNode generer un graph au format Mermaid MindMapping (generation de code)
 
