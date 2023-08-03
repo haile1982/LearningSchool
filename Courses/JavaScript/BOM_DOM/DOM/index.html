@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="example.css" />
+</head>
+
+<body>
+  <p id="id"></p>
+
+  <h2 id="id2" class="C2"></h2>
+
+  <p id="id3"></p>
+  <ul>
+    <li>toto</li>
+    <li>titi</li>
+  </ul>
+
+  <div id="mathml"></div>
+
+  <div id="mermaid"></div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+
+  <script src="example.js"></script>
+</body>
