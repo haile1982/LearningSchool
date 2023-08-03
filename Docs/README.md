@@ -19,4 +19,10 @@ mindmap
       Pen and paper
       Mermaid
 
+flowchart LR
+    id1[(Database)]
+
+flowchart LR
+    id1((This is the text in the circle))
+
 ```
