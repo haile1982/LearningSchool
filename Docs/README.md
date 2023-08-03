@@ -1,6 +1,6 @@
 Trainers (H ou M) --> Cours (Courses) --> Ontologies --> ParCours (Collection of Courses) --> Outils (Tools) --> Learners
 
-```mermaid
+````mermaid
 mindmap
   root((mindmap))
     Origins
@@ -18,11 +18,15 @@ mindmap
     Tools
       Pen and paper
       Mermaid
+      ```
 
+```mermaid
 flowchart LR
     id1[(Database)]
 
+    ```
+```mermaid
 flowchart LR
     id1((This is the text in the circle))
 
-```
+````
